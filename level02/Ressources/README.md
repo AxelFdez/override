@@ -66,7 +66,7 @@ Les deux adresses sont espaces de 160(0xa0) - 112(0x70) = 48 bits.
 
 Sachant que %p affiche 8bits nous devons divise 48 par 8 pour avoir la position du debut de la chaine.
 
-28 - (48 / 8) = 22. Donc %22p doit etre le debut de la chaine, le mot de passe contient 41 - 1 caracteres (0x29 - 1("\0")), 40 / 8 = 5. Nous devons affiches 5 %p.
+28 - (48 / 8) = 22. Donc %22p est le debut de la chaine, le mot de passe contient 41 - 1 caracteres (0x29 - 1("\0")), 40 / 8 = 5. Nous devons affiches 5 %p.
 
 ```
 level02@OverRide:~$ ./level02
