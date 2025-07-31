@@ -56,7 +56,7 @@ int main(int argc, char** argv, char** envp) {
             kill(pid, SIGKILL); // Si le processus enfant tente d'exécuter exec(), il imprime un message et envoie un signal SIGKILL à l'enfant pour le terminer immédiatement, puis sort de la boucle.
             break;
         }
-    } else {
+    } else { // processus enfant
         prctl(PR_SET_DUMPABLE, 1);
         ptrace(PTRACE_TRACEME, 0, NULL, NULL);
         puts("Give me some shellcode, k");

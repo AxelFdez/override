@@ -80,7 +80,7 @@ level02@OverRide:~$ ./level02
 0x756e505234376848|0x45414a3561733951|0x377a7143574e6758|0x354a35686e475873|0x48336750664b394d does not have access!
 ```
 
-Nous avons ce code ex hexadecimal, il nous faut convertir chaque bit en decimal, en enlevant d'abord les 0x et comme nous somme en endian, en commencant par la fin de chaque section.
+Nous avons ce code en hexadecimal, il nous faut convertir chaque bit en decimal, en enlevant d'abord les 0x et comme nous somme en endian, en commencant par la fin de chaque section.
 
 48 68 37 34 52 50 6e 75 51 39 73 61 35 4a 41 45 58 67 4e 57 43 71 7a 37 73 58 47 6e 68 35 4a 35 4d 39 4b 66 50 67 33 48
 
