@@ -16,7 +16,7 @@ int verify_user_pass(const char* password) {
 
 int main(void) {
     char username[256];
-    char password[100];
+    char password[64];
     int login_result;
 
     puts("********* ADMIN LOGIN PROMPT *********");
@@ -27,7 +27,7 @@ int main(void) {
     login_result = verify_user_name(username);
     if (login_result == 0) {
         puts("Enter Password: ");
-        fgets(password, sizeof(password), stdin);
+        fgets(password, 100, stdin); // L'exploit est ici, ça aurait dû être sizeof(password)
         password[strcspn(password, "\n")] = '\0'; // Retire le caractère de nouvelle ligne
 
         login_result = verify_user_pass(password);
