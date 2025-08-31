@@ -2,64 +2,100 @@
 #include <stdlib.h>
 #include <string.h>
 
-void secret_backdoor(void)
+/*
+dumb memoire de la structure (avec "my_username" et "my_message")
+(gdb) x/180cb $buf
+0x7fffffffe510:[m  y  _  m  e  s  s  a
+0x7fffffffe518: g  e  \n 0  0  0  0  0       
+0x7fffffffe520: 0  0  0  0  0  0  0  0       
+0x7fffffffe528: 0  0  0  0  0  0  0  0       
+0x7fffffffe530: 0  0  0  0  0  0  0  0       
+0x7fffffffe538: 0  0  0  0  0  0  0  0       
+0x7fffffffe540: 0  0  0  0  0  0  0  0       
+0x7fffffffe548: 0  0  0  0  0  0  0  0       
+0x7fffffffe550: 0  0  0  0  0  0  0  0       
+0x7fffffffe558: 0  0  0  0  0  0  0  0       
+0x7fffffffe560: 0  0  0  0  0  0  0  0       
+0x7fffffffe568: 0  0  0  0  0  0  0  0       
+0x7fffffffe570: 0  0  0  0  0  0  0  0       
+0x7fffffffe578: 0  0  0  0  0  0  0  0       
+0x7fffffffe580: 0  0  0  0  0  0  0  0       
+0x7fffffffe588: 0  0  0  0  0  0  0  0       
+0x7fffffffe590: 0  0  0  0  0  0  0  0       
+0x7fffffffe598: 0  0  0  0] size = 140
+0x7fffffffe598:            [m  y  _  u      
+0x7fffffffe5a0: s  e  r  n  a  m  e \n      
+0x7fffffffe5a8: 0  0  0  0  0  0  0  0       
+0x7fffffffe5b0: 0  0  0  0  0  0  0  0       
+0x7fffffffe5b8: 0  0  0  0  0  0  0  0       
+0x7fffffffe5c0: 0  0  0  0] size = 40
+(gdb) x/dh $buf+140+40
+0x7fffffffe5c4: 140
+*/
+typedef struct message {
+    char        msg[140];       // 0x7fffffffe510
+    char        username[40];   // 0x7fffffffe59c
+    int         len;            // 0x7fffffffe5c4
+}   t_message;
+
+void secret_backdoor()
 {
     char command[128];
 
-    fgets(command, 0x80, stdin);
+    fgets(command, 128, stdin);
     system(command);
-    return;
 }
 
-void handle_msg(void)
+void set_msg(t_message *msg)
 {
-    char buffer[140];
-    int msg_len;
+    char        input[1024] = {0};
 
-    // Initialisation
-    memset(buffer, 0, 140);
-    msg_len = 0x8c; // 140 bytes
-
-    set_username(buffer);
-    set_msg(buffer);
-    puts(">: Msg sent!");
-    return;
-}
-
-void set_msg(char *data)
-{
-    char input[1024];
-
-    memset(input, 0, 1024);
-
-    puts(">: Msg @Unix-Dude");
+    printf(">: Msg @Unix-Dude\n");
     printf(">>: ");
-    fgets(input, 0x400, stdin);
+    fgets(input, 1024, stdin);
 
-    // VULNÉRABILITÉ: utilise la valeur à l'offset 0xb4 comme limite
-    strncpy(data, input, *(int *)(data + 0xb4));
-    return;
+    /*
+    * VULNÉRABILITÉ 2:
+    * Si msg->len a été agrandi grâce à la première
+    * vulnérabilité, strncpy n'est plus sécurisé.
+    */
+    strncpy(msg->msg, input, msg->len);
 }
 
-void set_username(char *data)
+void set_username(t_message *msg)
 {
-    char username[140];
-    int i;
+    char        input[128] = {0};
 
-    memset(username, 0, 140);
-
-    puts(">: Enter your username");
+    printf(">: Enter your username\n");
     printf(">>: ");
-    fgets(username, 0x80, stdin);
+    fgets(input, 128, stdin);
 
-    // Copie vers l'offset 0x8c (peut déborder a 0xb4(180) car 41 caractères peuvent être copiés)
-    for (i = 0; (i < 0x29 && username[i] != '\0'); i++)
+    /*
+    * VULNÉRABILITÉ 1:
+    * La saisie accepte 128 caractères ;
+    * On peut écrire 41 caractères dans msg->username[i]
+    * alors que la taille de `msg->username` est 140.
+    * On peut déborder à l'offset 180 de la structure
+    * car 41 caractères peuvent être copiés
+    */
+    for (int i = 0; i <= 40 && input[i]; i++)
     {
-        data[0x8c + i] = username[i];
+        msg->username[i] = input[i];
     }
 
-    printf(">: Welcome, %s", data + 0x8c);
-    return;
+    printf(">: Welcome, %s", msg->username);
+}
+
+void handle_msg()
+{
+    t_message       msg = {0};
+    // memset(m.msg, 0, 140);
+    // memset(m.username, 0, 40);
+    msg.len = 140;
+
+    set_username(&msg);
+    set_msg(&msg);
+    puts(">: Msg sent!");
 }
 
 int main(void)
