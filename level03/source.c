@@ -37,9 +37,35 @@ int decrypt(char key) {
     }
 }
 
-void test(int param_1, int param_2) {
-    int diff = param_1 - param_2;
-    decrypt((char)diff);
+int test(int param_1, int param_2) {
+    int         result;
+    char        random;
+
+    switch (param_1 - param_2)
+    {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 16:
+        case 17:
+        case 18:
+        case 19:
+        case 20:
+        case 21:
+            result = decrypt(param_1 - param_2);
+        break;
+        default:
+            random = rand();
+            result = decrypt(random);
+        break;
+    }
+    return result;
 }
 
 int main() {
