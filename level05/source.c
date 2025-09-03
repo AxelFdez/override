@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 int main(void) {
-    char buffer[100];  // Déclaration d'un tableau de caractères pour stocker l'entrée.
+    char buffer[100];
 
     fgets(buffer, 100, stdin);  // Lecture de la chaîne de l'utilisateur avec protection contre le dépassement de tampon.
 
@@ -14,5 +14,5 @@ int main(void) {
     }
 
     printf(buffer);  // Affichage de la chaîne modifiée.
-    exit(0);  // Sortie propre du programme.
+    exit(0); 
 }

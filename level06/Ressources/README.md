@@ -1,6 +1,6 @@
 # Level 06
 
-Le programme decompile nous montre un programme qui attend une entree utilisateur, nom du compte puis serial number.
+Le code decompile nous montre un programme qui attend une entrée utilisateur : nom du compte puis serial number.
 
 Nous comprenons qu'un algorithme de correspondance du username et du serial number permet de lancer un shell.
 

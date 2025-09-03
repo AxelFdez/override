@@ -22,7 +22,7 @@ Nous allons utiliser dcode.fr, utiliser le dechiffrement par xor avec comme inpu
 
 ![dcode.fr](./level03.png)
 
-Nous comprenons que la cle que nous devons utiliser pour que encrypted_string soit identique a "Congratulations!" est 12(base 12) et donc 18 (base 10).
+Nous comprenons que la cle que nous devons utiliser pour que encrypted_string soit identique a "Congratulations!" est 12(hexadecimal) et donc 18 (decimal).
 
 Il suffit de faire le calcul suivant pour retrouver le mot de passe a rentrer.
 

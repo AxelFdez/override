@@ -6,7 +6,7 @@ Give me some shellcode, k
 asd
 child is exiting...
 ```
-Le programme decompiler nous montre un fork, et dans le child un gets, precede par "Give me some shellcode, k".
+Le programme decompiler nous montre un fork, et dans le child un gets, précédé par "Give me some shellcode, k".
 
 L'exploit se fait donc par le gets, qui n'a pas de protection de taille maximum. Dans le processus parent, le programme affiche "child is exiting..." lorsque le child termine.
 
@@ -28,7 +28,7 @@ Program received signal SIGSEGV, Segmentation fault.
 
 L'offset est 156.
 
-La solution trouvee est de faire un shellcode comme suit :
+La solution trouvée est de faire un shellcode comme suit :
 
 [A*156] + [Adresse de system] + [A*4] + [Adresse de "/bin/sh"]
 

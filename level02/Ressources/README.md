@@ -14,7 +14,7 @@ test does not have access!
 
 Ce programme prend deux inputs.
 
-Apres decompilation, nous constatons plusieurs choses, le fichier du pass est ouvert, puis est copie dans passwordFromFile.
+Apres decompilation, nous constatons plusieurs choses, le fichier du pass est ouvert, puis est copié dans passwordFromFile.
 
 Si le fichier ne peux etre lu, exit le programme.
 Cette condition nous empeche de break dans gdb car faute de droits.
@@ -30,11 +30,11 @@ Nous allons pouvoir utiliser l'exploit format string, qui consiste a donner le f
 Comme le contenu du fichier est copie dans une variable, nous sommes cense trouver son contenu en memoire. Cherchons dans gdb son emplacement.
 
 
-Le desassemblage dans gdb etant long, seules les lignes interessantes sont gardes.
+Le desassemblage dans gdb etant long, seules les lignes interessantes sont gardées.
 ```
 (gdb) disas main
 Dump of assembler code for function main:
-   0x0000000000400814 <+0>:     push   %rbp <=== la zone memoire ou le programme est charge est sur rbp.
+   0x0000000000400814 <+0>:     push   %rbp <=== la zone memoire ou le programme est chargé est sur rbp.
    0x0000000000400815 <+1>:     mov    %rsp,%rbp
    0x0000000000400818 <+4>:     sub    $0x120,%rsp
 
@@ -66,7 +66,7 @@ Les deux adresses sont espaces de 160(0xa0) - 112(0x70) = 48 bits.
 
 Sachant que %p affiche 8bits nous devons divise 48 par 8 pour avoir la position du debut de la chaine.
 
-28 - (48 / 8) = 22. Donc %22p est le debut de la chaine, le mot de passe contient 41 - 1 caracteres (0x29 - 1("\0")), 40 / 8 = 5. Nous devons affiches 5 %p.
+28 - (48 / 8) = 22. Donc %22p est le debut de la chaine, le mot de passe contient 41 - 1 caracteres ("\0"), 40 / 8 = 5. Nous devons affiches 5 %p.
 
 ```
 level02@OverRide:~$ ./level02

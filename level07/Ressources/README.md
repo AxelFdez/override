@@ -30,7 +30,7 @@ Input command: read
 
 Breakpoint 1, 0x080486dd in read_number ()
 (gdb) x/x $ebp+0x8 <=== emplacement de l'argument (voir code d'apres)
-0xffffd2c0:     0xffffd2e4 <=== adresse de l'indice et sa valeur.
+0xffffd2c0:     0xffffd2e4 <=== adresse du tableau data_array.
 ```
 
 ```
@@ -47,7 +47,7 @@ Dump of assembler code for function read_number:
    0x080486f6 <+31>:    mov    %eax,-0xc(%ebp)
    0x080486f9 <+34>:    mov    -0xc(%ebp),%eax
    0x080486fc <+37>:    shl    $0x2,%eax
-   0x080486ff <+40>:    add    0x8(%ebp),%eax   <=== l'indice est poussee ici
+   0x080486ff <+40>:    add    0x8(%ebp),%eax   <=== l'indice est pousse ici afin de recuperer la valeur dans data_array
    0x08048702 <+43>:    mov    (%eax),%edx
    0x08048704 <+45>:    mov    $0x8048b1b,%eax
    0x08048709 <+50>:    mov    %edx,0x8(%esp)
@@ -62,7 +62,7 @@ Dump of assembler code for function read_number:
 
 Nous allons tenter de trouver l'offset qui permettrait d'ecraser EIP.
 
-On met un nouveau bp au avant l'appel de read_number.
+On met un nouveau bp avant l'appel de read_number.
 
 ```
 (gdb) disas main
@@ -84,10 +84,10 @@ Stack level 0, frame at 0xffffd4b0:
  Arglist at 0xffffd4a8, args:
  Locals at 0xffffd4a8, Previous frame's sp is 0xffffd4b0
  Saved registers:
-  ebx at 0xffffd49c, ebp at 0xffffd4a8, esi at 0xffffd4a0, edi at 0xffffd4a4, eip at 0xffffd4ac <=== adresse de eip qui est la prochaine instruction
+  ebx at 0xffffd49c, ebp at 0xffffd4a8, esi at 0xffffd4a0, edi at 0xffffd4a4, eip at 0xffffd4ac <=== stockage de l'adresse de retour dans eip sur la stack frame.
 ```
 
-Nous allons faire le calcul suivant pour trouver l'offset de la fonction : 4294956204 (0xffffd4ac) - 4294955748 (ffffd2e4) = 456 / 4 (4 bits par adresse) = 114.
+Nous allons faire le calcul suivant pour trouver l'offset de la fonction : 4294956204 (0xffffd4ac) - 4294955748 (0xffffd2e4) = 456 / 4 (4 bits par adresse) = 114.
 
 A l'indice 114 nous devrions retouve l'adresse du return.
 
@@ -99,7 +99,7 @@ Continuing.
  Completed read command successfully
 ```
 
-4158936339 = f7e45513 en hexa
+4158936339 = 0xf7e45513 en hexa
 
 ```
 (gdb) b *0x080489f1   <=== derniere instruction du programme, ret.
