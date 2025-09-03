@@ -29,6 +29,8 @@ int store_number(int *data_array) {
     }
     else {
         data_array[index] = number;
+        // Gidhra le comprend comme ça:
+        // *(uint *)(data_array + index * 4) = number;
         return 0;
     }
 }
